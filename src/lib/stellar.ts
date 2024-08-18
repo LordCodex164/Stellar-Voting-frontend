@@ -1,7 +1,9 @@
-import StellarSdk, {TransactionBuilder, Networks, StrKey, Asset } from 'stellar-sdk'
+import {TransactionBuilder, Networks, StrKey, Asset } from '@stellar/stellar-sdk'
+import * as StellarSdk from '@stellar/stellar-sdk';
 import toast from 'react-hot-toast'
 
 const horizonUrl = 'https://horizon-testnet.stellar.org'
+
 const server = new StellarSdk.Horizon.Server(horizonUrl)
 
 /**
@@ -47,8 +49,8 @@ export async function fetchAccount(publicKey:string) {
  * @returns {Promise<BalanceLine[]>} Array containing balance information for each asset the account holds
  */
 export async function fetchAccountBalances(publicKey:string) {
-    const { balances } = await fetchAccount(publicKey)
-    return balances
+    const account = await fetchAccount(publicKey)
+    return account
 }
 
 /**

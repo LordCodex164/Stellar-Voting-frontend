@@ -1,7 +1,7 @@
 import { registerWalletRequest } from '../../store/actions'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import {Keypair} from "stellar-sdk"
+import {Keypair} from "@stellar/stellar-sdk"
 import {  } from '../../store/actions'
 import {useEffect, useMemo, useState } from 'react'
 import { registerWalletThunk } from '../../store/thunk'
