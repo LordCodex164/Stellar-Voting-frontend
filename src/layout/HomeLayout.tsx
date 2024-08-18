@@ -1,10 +1,10 @@
 import React from 'react'
 import { useNavigate, Navigate, Outlet } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import SideMenu from '../components/SideMenu/SideMenu'
 
 
-
-const HomeLayout = () => {
+const RootLayout = () => {
 
     const navigate = useNavigate()
    
@@ -12,11 +12,20 @@ const HomeLayout = () => {
 
     const user = useSelector(state => state)
 
+    console.log(user)
+
   return (
-    <div>
-        HomeLayout
+    <div className='flex min-h-screen'>
+      <SideMenu data={true}/>
+      <div className='w-full flex-1'>
+        {/* //<TopBar data={userData}/> */}
+        <div id='detail' className=''>
+        <Outlet/>
+       </div>
+      </div>
+      
     </div>
   )
 }
 
-export default HomeLayout
+export default RootLayout
