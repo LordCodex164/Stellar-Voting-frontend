@@ -2,12 +2,11 @@ import { useEffect, useState } from "react"
 import { fetchAccount, fetchRecentPayments } from "../../lib/stellar"
 import { useSelector } from "react-redux"
 import toast from "react-hot-toast";
-
-
+import { ClipLoader } from "react-spinners";
 
 const BalancePage = () => {
 
-    const [balance, setBalance] = useState('0');
+    const [balance, setBalance] = useState<string>("0");
     const [recentTransactions, setRecentTransactions] = useState<any>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const state = useSelector((state: {keyId: string, devInfo:string | null, publicKey:string}) => state)
@@ -20,6 +19,7 @@ const BalancePage = () => {
            const transactions = await fetchRecentPayments(sharedAccountId)
            setRecentTransactions(transactions)
            console.log(account)
+           setBalance(account ? account?.balances[0].balance : "")
            console.log(transactions)
            setIsLoading(false)
         } catch (error:any) {
@@ -33,16 +33,27 @@ const BalancePage = () => {
     },[])
 
   return (
-    <div className="container mx-auto p-4">
-    <h1 className="text-3xl font-bold mb-6 text-center">Account Information</h1>
-    
-    <div className="bg-white shadow-md rounded-lg p-6 mb-6">
-      <h2 className="text-2xl font-semibold mb-4">Community Pool Balance</h2>
-      <p className="text-xl mb-2">Current Balance: <span className="font-bold">{balance} XLM</span></p>
-      <p className="text-gray-600">Your account balance reflects your current holdings in the community pool.</p>
-    </div>
+    <>
+    {isLoading ?
+      <div className="flex justify-center items-center min-h-screen">
+       <ClipLoader size={28}/>
+      </div>
+      :
+      <div>
+        <div className="container mx-auto p-4">
+            <h1 className="text-3xl font-bold mb-6 text-center">Account Information</h1>  
+            <div className="bg-white shadow-md rounded-lg p-6 mb-6">
+            <h2 className="text-2xl font-semibold mb-4">Community Pool Balance</h2>
+            <p className="text-xl mb-2">Current Balance: <span className="font-bold">{balance} XLM</span></p>
+            <p className="text-gray-600">Your account balance reflects your current holdings in the community pool.</p>
+            </div>
 
-  </div>
+        </div>
+      </div>
+    }
+    
+    </>
+    
   )
 }
 

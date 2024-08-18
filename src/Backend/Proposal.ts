@@ -28,25 +28,30 @@ interface Proposal {
     }
   }
 
-  const getProposal = async (id:number) => {
+  const getProposal = async (publicAddress:string) => {
     try {
-      const response = await axios.get(`${BASE_URL}/${id}`)
+      const response = await axios.get(`${BASE_URL}/${publicAddress}`)
       return response.data
-    } catch (error) {
-      
+    } catch (error:any) {
+      console.log(error)
+      return error.message || error.response.data
     }
   }
 
   const getAllProposal = async () => {
     try {
-      
-    } catch (error) {
-      
+      const response = await axios.get(`${BASE_URL}`)
+      return response.data
+    } catch (error:any) {
+      console.log(error)
+      return error.message || error.response.data
     }
   }
 
 
 
   export {
-    createProposal
+    createProposal,
+    getProposal,
+    getAllProposal
   }

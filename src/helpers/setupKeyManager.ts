@@ -1,8 +1,6 @@
 import { KeyManagerPlugins, KeyType } from "@stellar/wallet-sdk";
 import { setupKeyManager } from "../lib/setupManager";
-import { useDispatch} from "react-redux";
-import { confirmPinCodeFailure, confirmPinCodeSuccess } from "../store/actions";
-import { registerWalletFailure, registerWalletSuccess } from "../store/actions";
+import { fundWithFriendbot } from "../lib/stellar";
 
 const keyManager = setupKeyManager()
 
@@ -18,12 +16,12 @@ const registerHelper = async (publicKey:string, privateKey:string, pinCode:strin
     password: pinCode,
     encrypterName: KeyManagerPlugins.ScryptEncrypter.name,
     })
+    await fundWithFriendbot(publicKey)
     return {
         keyId: keyMetaData.id
     }
     } catch (error) {
         console.log(error)
-        registerWalletFailure({error})
     }
     
     

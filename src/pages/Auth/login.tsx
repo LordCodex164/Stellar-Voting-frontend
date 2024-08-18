@@ -1,9 +1,7 @@
-import { registerWallet } from '../../store/actions'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import {Keypair} from "@stellar/stellar-sdk"
 import {  } from '../../store/actions'
-import { useMemo, useState } from 'react'
+import {useState } from 'react'
 import { confirmPinCodeThunk } from '../../store/thunk'
 import toast from 'react-hot-toast'
 
@@ -15,13 +13,9 @@ const Login = () => {
 
     const [pinCode, setPinCode] = useState("")
 
-    const [publicKeyState, setPublicKeyState] = useState(state.publicKey)
+    const [publicKeyState] = useState(state.publicKey)
 
     const navigate = useNavigate()
-
-    const keypair = Keypair.random()
-
-    console.log(state)
 
     const handleLogin = async (pinCode:string) => {
       console.log(pinCode)
@@ -40,8 +34,6 @@ const Login = () => {
         console.log(error)
       }
     }
-
-    console.log(pinCode)
 
   return (
     <div className='min-h-[100vh] flex flex-col justify-center items-center'>

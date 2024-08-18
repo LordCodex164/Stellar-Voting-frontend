@@ -25,7 +25,8 @@ const Login = () => {
 
     const handleLogin = async(pinCode:string) => {
        try {
-        await dispatch(registerWalletThunk(publicKey, privateKey, pinCode))  
+        await dispatch(registerWalletThunk(publicKey, privateKey, pinCode)) 
+        navigate("/home") 
        }
        catch(error){
          console.log(error)
@@ -36,11 +37,11 @@ const Login = () => {
 
     console.log(state)
 
-    useEffect(() => {
-     if(state.publicKey) {
-        navigate("/auth/login", {replace: true})
-     }
-    }, [state.publicKey])
+    // useEffect(() => {
+    //  if(state.publicKey) {
+    //     navigate("/auth/login", {replace: true})
+    //  }
+    // }, [state.publicKey])
 
   return (
     <div className='min-h-[100vh] flex flex-col justify-center items-center'>
