@@ -2,7 +2,7 @@
 
 import { registerHelper } from "../helpers/setupKeyManager";
 import { registerWalletFailure, registerWalletRequest, registerWalletSuccess, confirmPinCodeRequest, confirmPinCodeSuccess, confirmPinCodeFailure } from "./actions";
-import { confirmPinCode } from "../helpers/setupKeyManager";
+import { confirmPinCode, sign } from "../helpers/setupKeyManager";
 
 export const registerWalletThunk = (publicKey:string, privateKey:string, pinCode:string): any => {
     return async (dispatch:any) => {
@@ -32,5 +32,16 @@ export const registerWalletThunk = (publicKey:string, privateKey:string, pinCode
             console.log(error)
             dispatch(confirmPinCodeFailure({error}))
         }
+    }
+  }
+
+  export const signHelperThunk = (transactionXDR:string, network:string, pinCode:string, keyId:string):any => {
+    return async () => {
+    try {
+      const signedTransaction = sign({transactionXDR, network, pinCode, keyId})
+      return signedTransaction
+    } catch (error) {
+      throw new Error("failed to sign the transaction")
+    }
     }
   }

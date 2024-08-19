@@ -52,6 +52,12 @@ const walletReducer = (state = initialState, action:any) => {
                 ...state,
                  error: action.payload.error
                 }
+         //create a sign case
+
+         case "SIGN_TRANSACTION":
+            return state;  
+
+
         default:
             return state;
     }

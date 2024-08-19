@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import ReactModal from 'react-modal'
-import { FaTimes } from 'react-icons/fa'
-import CustomInput from '../../components/CustomInput/CustomInput'
-import { Dropdown } from 'primereact/dropdown';
 import 'primeicons/primeicons.css';
 import 'primereact/resources/themes/saga-blue/theme.css';  // Choose your theme
 import 'primereact/resources/primereact.min.css'
@@ -11,19 +7,27 @@ import {createProposal} from "../../Backend/Proposal"
 import { getAllProposal } from '../../Backend/Proposal'
 import toast from 'react-hot-toast'
 import {ClipLoader} from "react-spinners"
-import { AiOutlinePlus } from 'react-icons/ai';
 import ProposalModal from '../../components/Proposal/ProposalModal'
+import VoteModal from '../../components/Vote/VoteModal';
+import ProposalCreate from '../../components/Proposal/ProposalCreate';
+import { startTransaction } from '../../lib/stellar';
+import { signHelperThunk } from '../../store/thunk';
+import { useDispatch } from 'react-redux';
+import { Navigate } from 'react-router-dom';
 
 const Home = () => {
 
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [selectedDeadlineMinute, setSelectedDeadlineMinute] = useState<number>(0)
-  const [proposals, setProposals] = useState<{_id:number, title: string, description:string, amount:string, status:string, deadline:string}[]>([])
+  const [proposals, setProposals] = useState<{_id:number, title: string, description:string, publicKey:string, amount:string, status:string, deadline:string}[]>([])
   const [selectedAmount, setSelectedAmount] = useState<number>(0)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
-
+  const [isVoteOpen, setIsVoteOpen] = useState<boolean>(false)
+  const [proposalId, setProposalId] = useState<number>()
+  const [proposalKey, setProposalKey] = useState<string>("")
+  const [transaction, setTransaction] = useState<any>()
 
   const minuteOptions = Array.from({ length: 6 }, (_, i) => ({
     label: `${(i + 1) * 5} minutes`,
@@ -35,6 +39,7 @@ const amountOptions = Array.from({length: 5}, (_, i) =>  ({
   value: (i + 10) * 2
 }))
 
+const dispatch = useDispatch()
 
 const handleChange = (e:any) => {
   console.log(e.value)
@@ -47,8 +52,9 @@ const handleChangeAmount = (e:any) => {
 }
  
     
-    const state = useSelector((state:{privateKey: string, devInfo:string | null, publicKey:string}) => state)
+    const state = useSelector((state:{privateKey: string, devInfo:string | null, publicKey:string, pinCode:string, keyId:string}) => state)
 
+    console.log(state)
 
     const handleSubmit = async (event: { preventDefault: () => void }) => {
       event.preventDefault();
@@ -80,15 +86,34 @@ const handleChangeAmount = (e:any) => {
          setProposals(response)
          setIsLoading(false)
       } catch (error:any) {
-          toast.error(error?.message || error?.response.data)
+          setIsLoading(true)
+          toast.error(error || error?.response.data)
       }
-      
   }
 
   useEffect(() => {
    handleGetAllProposals()
   }, [])
 
+  const handleVote = async(id:number, key:string) => {
+    setIsVoteOpen(true)
+    setProposalId(id)
+    setProposalKey(key)
+   try {
+    const {transaction} = await startTransaction(state.publicKey, state.privateKey, key, "payment memo")
+    console.log(transaction)
+    setTransaction(transaction)
+    return transaction
+   } catch (error:any) {
+     toast.error(error?.message || error?.response.data)
+   }
+   finally{
+   }
+  }
+
+  if(state.publicKey === ""){
+    return <Navigate to="/auth"/>
+  }
     
   return (
     <>
@@ -106,49 +131,47 @@ const handleChangeAmount = (e:any) => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 pt-[40px]">
-      {proposals.map((proposal) => (
-        <div key={proposal._id} className="border flex-col space-y-3 p-4 rounded-md shadow">
+      {proposals? proposals.map((proposal) => (
+        <div key={proposal._id} className="border flex-col space-y-3 p-4 rounded-md shadow hover:shadow-lg transition-shadow">
           <h2 className="text-xl font-bold mb-2">{proposal.title}</h2>
           <p className="mb-2">{proposal.description}</p>
           <p className="mb-2">Amount: {proposal.amount} XLM</p>
           <p className="mb-2">Status: {proposal.status}</p>
           <p>Time left: </p>
-          <button className='duration-700 shadow-md transition-all scale-75 active:scale-100  hover:scale-90 max-w-[100px] ring-black ring-[0.1em] focus:border-dotted focus:border-[2px] focus:border-black hover:ring-blue-700 hover:animate-pulse px-[10px] py-[7px]'>Vote</button>
+          <button onClick={() => handleVote(proposal._id, proposal.publicKey)} className='duration-700 shadow-md transition-all scale-75 active:scale-100  hover:scale-90 max-w-[100px] ring-black ring-[0.1em] focus:border-dotted focus:border-[2px] focus:border-black hover:ring-blue-700 hover:animate-pulse px-[10px] py-[7px]'>Vote</button>
         </div>
-      ))}
-    </div>
-      <div className='pt-[50px] mt-[40px]'>
-
-        <div className='text-center'>
-          <h1>Do you want to propose a project</h1>
-          <p>Click Here to get Started?</p>
-          <button onClick={() => setIsOpen(true)} className='border-[#000] inline-flex gap-[10px] items-center focus:outline-none focus:border-[2px] border-[2px] px-[10px] py-[10px] hover:shadow-md'>
-            Propose a Project <AiOutlinePlus/>
-            </button>
-        </div>
-        
+      )) : []}
       </div>
-   </div>
-   <ProposalModal
-    onClose={() => setIsOpen(false)}
-    isOpen={isOpen}
-    amountOptions={amountOptions}
-    minuteOptions={minuteOptions}
-    selectedAmount={selectedAmount}
-    selectedDeadlineMinute={selectedDeadlineMinute}
-    setDescription={setDescription}
-    setTitle={setTitle}
-    title={title}
-    handleChange={handleChange}
-    handleSubmit={handleSubmit}
-    deadline={""}
-    description={description}
-    handleChangeAmount={handleChangeAmount}
-   />
-    </>
-    }
-    
+        <ProposalCreate onClose={() => setIsOpen(true)}/>
+      </div>
+      <ProposalModal
+        onClose={() => setIsOpen(false)}
+        isOpen={isOpen}
+        amountOptions={amountOptions}
+        minuteOptions={minuteOptions}
+        selectedAmount={selectedAmount}
+        selectedDeadlineMinute={selectedDeadlineMinute}
+        setDescription={setDescription}
+        setTitle={setTitle}
+        title={title}
+        handleChange={handleChange}
+        handleSubmit={handleSubmit}
+        deadline={""}
+        description={description}
+        handleChangeAmount={handleChangeAmount}
+      />
 
+      </>
+      }
+      
+        <VoteModal
+        isOpen={isVoteOpen}
+        onClose={() => setIsVoteOpen(false)}
+        proposalId={proposalId as number}
+        setProposalId={setProposalId}
+        proposalKey={proposalKey}
+        transaction={transaction}
+        />
    
     </>
       

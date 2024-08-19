@@ -1,4 +1,4 @@
-import {TransactionBuilder, Networks, StrKey, Asset } from '@stellar/stellar-sdk'
+import {TransactionBuilder, Networks, StrKey, Asset, Operation } from '@stellar/stellar-sdk'
 import * as StellarSdk from '@stellar/stellar-sdk';
 import toast from 'react-hot-toast'
 
@@ -89,14 +89,33 @@ export async function fundWithFriendbot(publicKey:string) {
  * @param {string} sourcePublicKey Public Stellar address which will be the source account for the created transaction
  * @returns {Promise<TransactionBuilder>}
  */
-export async function startTransaction(sourcePublicKey:string) {
+export async function startTransaction(sourcePublicKey:string, privateKey:string, destinationPublicKey:string, memo:string | any) {
+    console.log(sourcePublicKey)
+    console.log(destinationPublicKey)
     let source = await server.loadAccount(sourcePublicKey)
+    const voter = StellarSdk.Keypair.fromSecret(privateKey);
+    const fee = await server.fetchBaseFee()
     const transaction = new TransactionBuilder(source, {
         networkPassphrase: Networks.TESTNET,
-        fee: '100000',
+        fee: fee.toString(),
     })
-
-    return transaction
+    .addOperation(Operation.payment({
+        destination: destinationPublicKey,
+        asset: Asset.native(),
+        amount: "0.006"
+    }))
+    if (memo) {
+        if (typeof memo === 'string') {
+            transaction.addMemo(StellarSdk.Memo.text(memo))
+        } else if (typeof memo === 'object') {
+            transaction.addMemo(StellarSdk.Memo.hash(memo.toString('hex')))
+        }
+    }
+    let builtTransaction = transaction.setTimebounds(30000, 3500000000).build()
+      builtTransaction.sign(voter);
+    return {
+        transaction: builtTransaction,
+    }
 }
 
 /**
@@ -108,7 +127,8 @@ export async function startTransaction(sourcePublicKey:string) {
  */
 export async function submit(transaction:any) {
     try {
-        await server.submitTransaction(transaction)
+        const signedTransaction = await server.submitTransaction(transaction)
+        return signedTransaction
     } catch (err) {
         throw new Error("error submitting transaction")
     }

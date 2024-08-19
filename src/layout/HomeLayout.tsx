@@ -10,9 +10,13 @@ const RootLayout = () => {
    
     //create the useSelector state
 
-    const user = useSelector(state => state)
+    const user = useSelector((state: {publicKey:string}) => state)
 
     console.log(user)
+
+    if(user.publicKey === ""){
+      return <Navigate to={"/auth"}/>
+    }
 
   return (
     <div className='flex min-h-screen'>

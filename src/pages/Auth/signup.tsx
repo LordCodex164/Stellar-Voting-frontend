@@ -20,15 +20,20 @@ const Login = () => {
     const publicKey = useMemo(() => keypair.publicKey(), [])
     const privateKey = useMemo(() => keypair.secret(), [])
 
-    const state = useSelector((state: {privateKey: string, devInfo:string | null, publicKey:string}) => state)
+    const [isLoading, setIsLoading] = useState(false)
+
+    const state = useSelector((state: {privateKey: string, devInfo:string | null, publicKey:string, keyId:string}) => state)
 
 
     const handleLogin = async(pinCode:string) => {
+       setIsLoading(true)
        try {
         await dispatch(registerWalletThunk(publicKey, privateKey, pinCode)) 
         navigate("/home") 
+        setIsLoading(false)
        }
        catch(error){
+        setIsLoading(true)
          console.log(error)
          toast.error("pin code is incorrect")
        }
@@ -37,11 +42,11 @@ const Login = () => {
 
     console.log(state)
 
-    // useEffect(() => {
-    //  if(state.publicKey) {
-    //     navigate("/auth/login", {replace: true})
-    //  }
-    // }, [state.publicKey])
+    useEffect(() => {
+     if(state.publicKey && state.keyId) {
+        navigate("/auth/login", {replace: true})
+     }
+    }, [state.publicKey])
 
   return (
     <div className='min-h-[100vh] flex flex-col justify-center items-center'>
@@ -69,7 +74,7 @@ const Login = () => {
             </div>
 
             <div className='flex justify-center bg-blue-500 mt-[20px] hover:text-white rounded-[0.5rem] py-[7px]'>
-                <button type='button' onClick={() => handleLogin(pinCode)}>Sign Up</button>
+                <button type='button' disabled={isLoading} onClick={() => handleLogin(pinCode)}>{isLoading ? "Please wait...": "Sign Up"}</button>
             </div>
         </div>
        </div>

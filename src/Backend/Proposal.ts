@@ -1,6 +1,7 @@
 import axios from "axios"
+import toast from "react-hot-toast"
 
-export const BASE_URL = "http://localhost:5000/api/v1/proposal"
+export const BASE_URL = "https://stellar-backend-ud86.onrender.com/api/v1/proposal"
 
 interface Proposal {
     title:string,
@@ -28,13 +29,13 @@ interface Proposal {
     }
   }
 
-  const getProposal = async (publicAddress:string) => {
+  const getProposal = async (id:number) => {
     try {
-      const response = await axios.get(`${BASE_URL}/${publicAddress}`)
+      const response = await axios.get(`${BASE_URL}/${id}`)
       return response.data
     } catch (error:any) {
       console.log(error)
-      return error.message || error.response.data
+      toast.error(error.message || error.response.data)
     }
   }
 
@@ -44,7 +45,7 @@ interface Proposal {
       return response.data
     } catch (error:any) {
       console.log(error)
-      return error.message || error.response.data
+      toast.error(error.message || error.response.data)
     }
   }
 

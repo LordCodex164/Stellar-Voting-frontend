@@ -15,13 +15,17 @@ const Login = () => {
 
     const [publicKeyState] = useState(state.publicKey)
 
+    const [isLoading, setIsLoading] = useState(false)
+
     const navigate = useNavigate()
 
     const handleLogin = async (pinCode:string) => {
+      setIsLoading(true)
       console.log(pinCode)
       try {
        const account = await dispatch(confirmPinCodeThunk(pinCode, state.keyId))
         console.log(account)
+        setIsLoading(false)
         if(!account){
           toast.error("incorrect pincode")
           return;
@@ -32,6 +36,7 @@ const Login = () => {
        } 
       } catch (error) {
         console.log(error)
+        setIsLoading(false)
       }
     }
 
@@ -61,7 +66,7 @@ const Login = () => {
             </div>
 
             <div className='flex justify-center bg-blue-500 mt-[20px] hover:text-white rounded-[0.5rem] py-[7px]'>
-                <button type='button' onClick={() => handleLogin(pinCode)}>Login</button>
+                <button type='button' onClick={() => handleLogin(pinCode)}>{isLoading ? "Please wait...": "Log in"}</button>
             </div>
         </div>
        </div>

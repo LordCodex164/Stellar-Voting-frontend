@@ -94,7 +94,7 @@ const ProposalModal = ({isOpen, onClose, handleSubmit, title, setTitle, amountOp
     </form>
 
       </div>
-  </ReactModal>
+    </ReactModal>
   )
 }
 
