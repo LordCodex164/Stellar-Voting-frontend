@@ -29,7 +29,8 @@
     "redux": "^5.0.1",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^3.1.0",
-    "stellar-sdk": "^12.2.0"
+    "stellar-sdk": "^12.2.0",
+    "styled-components": "^6.1.12"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",

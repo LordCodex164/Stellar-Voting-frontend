@@ -7,7 +7,6 @@ import { getAllProposal } from '../../Backend/Proposal'
 import toast from 'react-hot-toast'
 import {ClipLoader} from "react-spinners"
 import VoteModal from '../../components/Vote/VoteModal';
-import ProposalCreate from '../../components/Proposal/ProposalCreate';
 import { startTransaction } from '../../lib/stellar';
 import { Navigate } from 'react-router-dom';
 import ProposalItem from '../../components/Proposal/ProposalItem';

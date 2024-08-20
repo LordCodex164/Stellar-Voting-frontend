@@ -16,8 +16,19 @@
   border: 3px solid green;
 }
 
-body{
-  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+
+@font-face {
+  font-family: "Jersey10";
+  src: url("./assets/fonts/Jersey_10/Jersey10-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@layer base {
+  html {
+    font-family: "Jersey10", sans-serif;
+  }
 }
 
 @media (max-width: 1023px) {
