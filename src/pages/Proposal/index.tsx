@@ -78,6 +78,7 @@ const ProposalPage = () => {
      handleGetAllProposals()
     }, [])
 
+    console.log(proposals)
 
   return (
     <>
@@ -90,7 +91,7 @@ const ProposalPage = () => {
        <PageTitle title='Your Proposals'/>
      <div className='grid w-full grid-flow-row'>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-4 pt-[40px]">
-      {proposals.length > 0 ? proposals.map((proposal) => (
+      {proposals.length  > 0 && proposals ? proposals.map((proposal) => (
         <ProposalItem  key={proposal._id} proposal={proposal} />
       ))
       :

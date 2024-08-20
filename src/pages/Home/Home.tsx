@@ -78,7 +78,7 @@ const Home = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 pt-[40px]">
-      {proposals.length > 0 ? proposals.map((proposal) => (
+      {proposals.length > 0 && proposals ? proposals.map((proposal) => (
         <ProposalItem proposal={proposal} isVoting={true} handleVote={handleVote as unknown as (proposalId: number, publicKey: string) => Promise<void>}/>
       )) : []}
       </div>
