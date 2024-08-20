@@ -65,7 +65,7 @@ const VoteModal = ({isOpen, onClose, proposalId, proposalKey, transaction}: Vote
     <div className='flex flex-col justify-center items-center py-[30px]'>
 
       <div className='flex flex-row gap-[30px] justify-between mb-[10px] w-full lg:px-[40px] text-center items-center'>
-        <h1 className='text-2xl font-bold'>Vote this Project For Just 0.001XHM</h1>
+        <h1 className='text-2xl font-bold'>Vote this Project For Just 0.001XLM</h1>
         <span><FaTimes className='cursor-pointer' onClick={onClose} /></span>
       </div>
 

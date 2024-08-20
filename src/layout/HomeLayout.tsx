@@ -2,6 +2,7 @@ import React from 'react'
 import { useNavigate, Navigate, Outlet } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import SideMenu from '../components/SideMenu/SideMenu'
+import TopBar from '../components/TopBar/Index'
 
 
 const RootLayout = () => {
@@ -9,6 +10,8 @@ const RootLayout = () => {
     const navigate = useNavigate()
    
     //create the useSelector state
+
+    ///create a function that stores data in the state
 
     const user = useSelector((state: {publicKey:string}) => state)
 
@@ -22,7 +25,7 @@ const RootLayout = () => {
     <div className='flex min-h-screen'>
       <SideMenu data={true}/>
       <div className='w-full flex-1'>
-        {/* //<TopBar data={userData}/> */}
+        <TopBar data={{}}/>
         <div id='detail' className=''>
         <Outlet/>
        </div>

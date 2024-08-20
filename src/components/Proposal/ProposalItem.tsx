@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 interface ProposalItemProps {
     proposal:{
@@ -7,11 +7,16 @@ interface ProposalItemProps {
     description: string,
     amount:string,
     status: string,
-    deadline: number
-    }
+    publicKey:string,
+    deadline: number,
+    },
+    isVoting?:boolean,
+    disabled?:boolean,
+    handleVote?: (proposalId:number, publicKey: string) => Promise<void>,
+
 }
 
-const ProposalItem = ({proposal}: ProposalItemProps) => {
+const ProposalItem = ({proposal, isVoting, handleVote}: ProposalItemProps) => {
    
     const calculateTimeLeft = () => {
       const pastDate:Date = new Date(proposal.deadline)
@@ -54,7 +59,8 @@ const ProposalItem = ({proposal}: ProposalItemProps) => {
      :
      <p>Time left: {timeLeft.minutes} Minutes {timeLeft.seconds} Seconds </p>
     }
-    
+    {isVoting && <button onClick={() => handleVote && handleVote(proposal._id, proposal.publicKey)} className={`${proposal.status !== "expired" ? "duration-700 shadow-md transition-all scale-75 active:scale-100  hover:scale-90 max-w-[100px] ring-black ring-[0.1em] focus:border-dotted focus:border-[2px] focus:border-black hover:ring-blue-700 hover:animate-pulse px-[10px] py-[7px]" : "text-gray-300 border-[2px] border-gray-300"}`}>
+    Vote</button>}
   </div>
   )
 }
