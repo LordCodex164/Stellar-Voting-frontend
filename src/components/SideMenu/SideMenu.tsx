@@ -1,10 +1,7 @@
 import {useEffect, useState} from 'react'
 import { Link, useLocation} from 'react-router-dom'
 import cx from "classnames"
-import { ImProfile } from 'react-icons/im'
-import { GrDashboard } from 'react-icons/gr'
 import { FiLogOut } from 'react-icons/fi'
-import { RxDashboard } from 'react-icons/rx'
 import { FaWallet, FaMoneyBillWave, FaHome, FaUser, FaFileContract } from 'react-icons/fa'
 import StellarLogo from "../../assets/stellar-logo.svg"
 
