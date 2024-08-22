@@ -1,7 +1,7 @@
-import React, { startTransition, useState } from 'react'
+import React, {useState } from 'react'
 import { FaTimes } from 'react-icons/fa';
 import ReactModal from 'react-modal';
-import { startTransaction, submit } from '../../lib/stellar';
+import { submit } from '../../lib/stellar';
 import { useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 import { submitVote } from '../../Backend/vote';
@@ -13,15 +13,16 @@ interface VoteModalProps {
     setProposalId: React.Dispatch<React.SetStateAction<number | undefined>>;
     proposalKey:string;
     transaction:string;
+    getAllTransactions: () => void;
 }
 
-const VoteModal = ({isOpen, onClose, proposalId, proposalKey, transaction}: VoteModalProps) => {
+const VoteModal = ({isOpen, onClose, proposalId, transaction, getAllTransactions}: VoteModalProps) => {
 
     const user = useSelector((state: {publicKey:string}) => state)
 
     const [isVoting, setIsVoting] = useState(false)
 
-    console.log("transaction>>", transaction)
+    console.log(transaction)
 
     const customStyles = {
         content: {
@@ -52,6 +53,7 @@ const VoteModal = ({isOpen, onClose, proposalId, proposalKey, transaction}: Vote
         toast.success('Vote submitted successfully')
         setIsVoting(false)
         onClose()
+        getAllTransactions()
         } catch (error:any) {
             toast.error(error?.message || error?.response.data)
             setIsVoting(false)

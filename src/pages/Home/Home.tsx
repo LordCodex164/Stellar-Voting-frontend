@@ -15,7 +15,7 @@ import PageTitle from '../../components/PageTitle/PageTitle';
 const Home = () => {
 
   const [isOpen, setIsOpen] = useState<boolean>(false)
-  const [proposals, setProposals] = useState<{_id:number, title: string, description:string, publicKey:string, amount:string, status:string, deadline:number}[]>([])
+  const [proposals, setProposals] = useState<{_id:number, title: string, description:string, publicKey:string, amount:string, status:string, deadline:number, votes: number}[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isVoteOpen, setIsVoteOpen] = useState<boolean>(false)
   const [proposalId, setProposalId] = useState<number>()
@@ -93,6 +93,7 @@ const Home = () => {
         setProposalId={setProposalId}
         proposalKey={proposalKey}
         transaction={transaction}
+        getAllTransactions={handleGetAllProposals}
         />
    
     </>

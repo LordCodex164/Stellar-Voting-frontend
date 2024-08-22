@@ -18,7 +18,7 @@ export const submitVote = async ({voter, proposalId, amount, transactionId}: Pro
         amount,
     }
     try {
-     const response = await axios.post(`${BASE_URL}/vote`, data)
+     const response = await axios.post(`${BASE_URL}/`, data)
      return response.data
     } catch (error: any) {
         console.log(error)

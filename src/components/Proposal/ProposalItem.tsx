@@ -9,6 +9,7 @@ interface ProposalItemProps {
     status: string,
     publicKey:string,
     deadline: number,
+    votes: number,
     },
     isVoting?:boolean,
     disabled?:boolean,
@@ -54,12 +55,13 @@ const ProposalItem = ({proposal, isVoting, handleVote}: ProposalItemProps) => {
     <p className="mb-2">{proposal.description}</p>
     <p className="mb-2">Amount: {proposal.amount} XLM</p>
     <p className="mb-2">Status: {proposal.status}</p>
+    <p className="mb-2">Votes: {proposal.votes}</p>
     {timeLeft.minutes == 0 && timeLeft.seconds == 0 ?
     <p>Time is Up</p>
      :
      <p>Time left: {timeLeft.minutes} Minutes {timeLeft.seconds} Seconds </p>
     }
-    {isVoting && <button onClick={() => handleVote && handleVote(proposal._id, proposal.publicKey)} className={`${proposal.status !== "expired" ? "duration-700 shadow-md transition-all scale-75 active:scale-100  hover:scale-90 max-w-[100px] ring-black ring-[0.1em] focus:border-dotted focus:border-[2px] focus:border-black hover:ring-blue-700 hover:animate-pulse px-[10px] py-[7px]" : "text-gray-300 border-[2px] border-gray-300"}`}>
+    {isVoting && <button disabled={proposal.status === "expired" ? true : false} onClick={() => handleVote && handleVote(proposal._id, proposal.publicKey)} className={`${proposal.status !== "expired" ? "duration-700 shadow-md transition-all scale-75 active:scale-100  hover:scale-90 max-w-[100px] ring-black ring-[0.1em] focus:border-dotted focus:border-[2px] focus:border-black hover:ring-blue-700 hover:animate-pulse px-[10px] py-[7px]" : "text-gray-300 border-[2px] border-gray-300"}`}>
     Vote</button>}
   </div>
   )

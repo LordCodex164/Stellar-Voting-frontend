@@ -11,7 +11,7 @@ import PageTitle from '../../components/PageTitle/PageTitle'
 const ProposalPage = () => {
 
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
-    const [proposals, setProposals] = useState<{_id:number, title: string, description:string, publicKey:string, amount:string, status:string, deadline:number}[]>([])
+    const [proposals, setProposals] = useState<{_id:number, title: string, description:string, publicKey:string, amount:string, votes: number, status:string, deadline:number}[]>([])
     const state = useSelector((state: {keyId: string, devInfo:string | null, publicKey:string}) => state)
     const [isLoading, setIsLoading] = useState(false)
     const [selectedDeadlineMinute, setSelectedDeadlineMinute] = useState<number>(0)
@@ -20,10 +20,11 @@ const ProposalPage = () => {
     const [description, setDescription] = useState("")
 
     const handleChange = (e:any) => {
-      console.log(e.value)
       setSelectedDeadlineMinute(e.value)
     }
-    
+
+    //create a function that stores the publicKey
+
     const handleChangeAmount = (e:any) => {
       setSelectedAmount(e.value)
       
@@ -77,8 +78,6 @@ const ProposalPage = () => {
     useEffect(() => {
      handleGetAllProposals()
     }, [])
-
-    console.log(proposals)
 
   return (
     <>
